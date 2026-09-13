@@ -1,17 +1,28 @@
 /**
  * ==========================================================================
  * Project: الأول في الرياض للمظلات والسواتر والساندوتش بانل والبرجولات
- * Architecture: Vanilla JS - High Performance & Enterprise Conversion Engine
- * Features: Google Ads Tracking, PWA Service Worker Registration, Dev Exclusion
+ * Architecture: Vanilla JS - Auto Cache Cleaner & Conversion Engine
  * ==========================================================================
  */
 
 (function () {
   'use strict';
 
-  // --------------------------------------------------------------------------
-  // 1. الإعدادات والبيانات الأساسية (Config)
-  // --------------------------------------------------------------------------
+  // تنظيف أي Service Worker قديم أو كاش معلق في متصفح الزائر تلقائياً
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+  if ('caches' in window) {
+    caches.keys().then(function (names) {
+      for (let name of names) caches.delete(name);
+    });
+  }
+
+  // 1. الإعدادات
   const APP_CONFIG = {
     clientPhone: '966552235142',
     clientPhoneFormatted: '0552235142',
@@ -30,9 +41,6 @@
     }
   };
 
-  // --------------------------------------------------------------------------
-  // 2. تهيئة مصفوفة dataLayer فورياً في الذاكرة لحماية الإحالات السريعة
-  // --------------------------------------------------------------------------
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
@@ -75,7 +83,6 @@
     triggerEvents.forEach(evt => window.addEventListener(evt, handler, { passive: true, once: true }));
   }
 
-  // دالة التحويل المحمية بصمام أمان زمني ضد حظر المانعات
   window.reportConversion = function (conversionType, customCallback) {
     injectGoogleAdsScript();
 
@@ -83,14 +90,11 @@
     const runCallbackOnce = function () {
       if (!executed) {
         executed = true;
-        if (typeof customCallback === 'function') {
-          customCallback();
-        }
+        if (typeof customCallback === 'function') customCallback();
       }
     };
 
     if (isDeveloperSession()) {
-      console.warn(`[Tracking Bypassed - Dev Mode Active]: Event: ${conversionType}`);
       runCallbackOnce();
       return;
     }
@@ -100,7 +104,6 @@
     if (conversionType === 'whatsapp') label = APP_CONFIG.googleAds.whatsAppLabel;
     if (conversionType === 'form') label = APP_CONFIG.googleAds.formLabel;
 
-    // مهلة أمان قصوى 600ms تمنع تعليق العميل نهائياً
     const safetyTimeout = setTimeout(runCallbackOnce, 600);
 
     if (typeof window.gtag === 'function' && label && !label.includes('xxxx')) {
@@ -123,9 +126,6 @@
     }
   };
 
-  // --------------------------------------------------------------------------
-  // 3. إدارة القوائم المنسدلة ودرج الجوال
-  // --------------------------------------------------------------------------
   function setupNavigation() {
     const hamburgerBtn = document.querySelector('.hamburger-btn');
     const drawer = document.querySelector('.mobile-nav-drawer');
@@ -133,7 +133,6 @@
     const drawerCloseBtn = document.querySelector('.mobile-drawer-close');
     const accordionBtn = document.querySelector('.mobile-accordion-btn');
     const accordionContent = document.querySelector('.mobile-accordion-content');
-    const siteHeader = document.querySelector('.site-header');
 
     function toggleDrawer(open) {
       if (!drawer || !backdrop || !hamburgerBtn) return;
@@ -158,20 +157,8 @@
         }
       });
     }
-
-    window.addEventListener('scroll', function () {
-      if (!siteHeader) return;
-      if (window.scrollY > 20) {
-        siteHeader.classList.add('scrolled');
-      } else {
-        siteHeader.classList.remove('scrolled');
-      }
-    }, { passive: true });
   }
 
-  // --------------------------------------------------------------------------
-  // 4. زر الصعود للأعلى (Back To Top)
-  // --------------------------------------------------------------------------
   function setupBackToTop() {
     const scrollBtn = document.querySelector('.floating-scroll-left');
     if (!scrollBtn) return;
@@ -189,9 +176,6 @@
     });
   }
 
-  // --------------------------------------------------------------------------
-  // 5. حاسبة التكلفة ونموذج التسعير الفوري عبر الواتساب
-  // --------------------------------------------------------------------------
   function setupQuoteCalculator() {
     const calcForm = document.getElementById('quick-quote-form');
     if (!calcForm) return;
@@ -223,7 +207,7 @@
       const serviceName = serviceSelect?.options[serviceSelect.selectedIndex]?.text || 'مظلات وسواتر';
       const areaVal = areaInput?.value || 'غير محددة';
 
-      const messageText = `السلام عليكم ورحمة الله، أود طلب تسعيرة فورية ومعاينة:\n- الخدمة: ${serviceName}\n- الحي المستهدف: ${district}\n- المساحة التقديرية: ${areaVal} م²\n- المصدر: الموقع الإلكتروني`;
+      const messageText = `السلام عليكم ورحمة الله، أود طلب تسعيرة فورية ومعاينة:\n- الخدمة: ${serviceName}\n- الحي: ${district}\n- المساحة: ${areaVal} م²\n- المصدر: الموقع الإلكتروني`;
       const encodedMsg = encodeURIComponent(messageText);
       const targetUrl = `https://wa.me/${APP_CONFIG.clientPhone}?text=${encodedMsg}`;
 
@@ -233,9 +217,6 @@
     });
   }
 
-  // --------------------------------------------------------------------------
-  // 6. رصد نقرات الاتصال والواتساب مع استثناء رقم المطور
-  // --------------------------------------------------------------------------
   function setupConversionClickTrackers() {
     let lastClickTime = 0;
 
@@ -265,29 +246,12 @@
     }, true);
   }
 
-  // --------------------------------------------------------------------------
-  // 7. تسجيل تطبيق الويب التقدمي (PWA Service Worker Registration)
-  // --------------------------------------------------------------------------
-  function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch((err) => {
-          console.warn('SW registration failed:', err);
-        });
-      });
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // 8. تشغيل المحركات عند اكتمال تحميل الصفحة
-  // --------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
     scheduleLazyTracking();
     setupNavigation();
     setupBackToTop();
     setupQuoteCalculator();
     setupConversionClickTrackers();
-    registerServiceWorker();
   });
 
 })();
