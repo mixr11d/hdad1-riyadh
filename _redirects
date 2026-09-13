@@ -1,0 +1,14 @@
+# توجيه الروابط النظيفة بدون .html للصفحات المناسبة
+/shades               /shades-installation.html         301
+/fences               /fences-installation.html         301
+/sandwich-panel       /sandwich-panel-installation.html 301
+/pergolas             /pergolas-installation.html       301
+/prices               /prices.html                      301
+/our-works            /our-works.html                   301
+/about                /about-us.html                    301
+/contact              /contact-us.html                  301
+/faq                  /faq.html                         301
+/warranty             /warranty.html                    301
+
+# توجيه أي مسار غير معروف إلى صفحة الخطأ 404 المخصصة
+/*                    /404.html                         404
