@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /thank-you.html
+Disallow: /404.html
+
+# السماح للروبوتات المتخصصة في الفهرسة المتقدمة
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# رابط خريطة الموقع الرسمية
+Sitemap: https://hdad1-riyadh.pages.dev/sitemap.xml
