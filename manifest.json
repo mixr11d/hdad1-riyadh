@@ -1,0 +1,26 @@
+{
+  "name": "الأول في الرياض للمظلات والسواتر والساندوتش بانل والبرجولات",
+  "short_name": "الأول للمظلات",
+  "description": "أفضل ورشة تصنيع وتركيب مظلات سيارات، سواتر أحواش، ساندوتش بانل، وبرجولات في الرياض بضمان 10 سنوات.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#1e232a",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "images/logo_result.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/logo_result.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
