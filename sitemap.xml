@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- الصفحة الرئيسية -->
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/index.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- صفحات الخدمات التخصصية الـ 4 -->
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/shades-installation.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/fences-installation.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/sandwich-panel-installation.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/pergolas-installation.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- صفحات الأسعار والمشاريع والهبوط المحلي -->
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/prices.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/city-landing.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/our-works.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- الصفحات التعريفية والتواصل والأسئلة والضمان -->
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/about-us.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/contact-us.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/faq.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/warranty.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- السياسات والشروط العامة -->
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/privacy-policy.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://hdad1-riyadh.pages.dev/terms-conditions.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
