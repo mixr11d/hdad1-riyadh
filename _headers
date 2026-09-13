@@ -1,0 +1,23 @@
+# ترويسات الكاش طويل المدى للأصول الثابتة والصور
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/style.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/script.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/manifest.json
+  Cache-Control: public, max-age=604800
+
+# منع تخزين ملف خدمة التطبيق لضمان وصول التحديثات فوراً
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# ترويسات الأمان والحماية لكافة الصفحات
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
