@@ -5,11 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الأول في الرياض للمظلات والسواتر والساندوتش بانل والبرجولات</title>
   <meta name="description" content="تركيب وتصنيع مظلات سيارات، سواتر أحواش، ساندوتش بانل معزول، وبرجولات حدائق بالرياض بأفضل الأسعار وضمان 10 سنوات.">
-  <link rel="canonical" href="https://hdad1-riyadh.pages.dev/index.html">
+  <link rel="canonical" href="https://hdad1-riyadh.pages.dev/">
   <link rel="stylesheet" href="style.css">
+
+  <!-- كود فوري لتنظيف كاش المتصفح القديم وإلغاء أي تعليق -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var r of registrations) { r.unregister(); }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(keys) {
+        for (var k of keys) { caches.delete(k); }
+      });
+    }
+  </script>
 </head>
 <body>
 
+  <!-- شريط العروض العلوي -->
   <div class="top-bar">
     <div class="container top-bar-inner">
       <div class="top-bar-offer">
@@ -23,15 +38,17 @@
     </div>
   </div>
 
+  <!-- الهيدر مع رابط الرئيسية الصحيح وخيار الأسئلة الشائعة في القائمة -->
   <header class="site-header">
     <div class="container header-container">
-      <a href="index.html" class="brand-logo">
+      <a href="/" class="brand-logo">
         <img src="images/logo_result.webp" alt="شعار المؤسسة" width="54" height="54">
         <span>الأول لمظلات وسواتر الرياض</span>
       </a>
 
       <nav class="nav-menu">
-        <a href="index.html" class="nav-link active">الرئيسية</a>
+        <a href="/" class="nav-link active">الرئيسية</a>
+        
         <div class="nav-dropdown-wrapper">
           <a href="javascript:void(0)" class="nav-link dropdown-toggle">
             <span>خدماتنا</span>
@@ -44,10 +61,12 @@
             <a href="pergolas-installation.html" class="dropdown-item">برجولات حدائق وجلسات</a>
           </div>
         </div>
+
         <a href="prices.html" class="nav-link">الأسعار</a>
         <a href="our-works.html" class="nav-link">معرض الأعمال</a>
-        <a href="about-us.html" class="nav-link">من نحن</a>
+        <a href="faq.html" class="nav-link">الأسئلة الشائعة</a>
         <a href="warranty.html" class="nav-link">الضمان</a>
+        <a href="about-us.html" class="nav-link">من نحن</a>
         <a href="contact-us.html" class="nav-link">اتصل بنا</a>
       </nav>
 
@@ -59,6 +78,7 @@
     </div>
   </header>
 
+  <!-- درج الموبايل مع إضافة الأسئلة الشائعة ورابط الرئيسية / -->
   <div class="mobile-drawer-backdrop"></div>
   <aside class="mobile-nav-drawer">
     <div class="mobile-drawer-header">
@@ -66,16 +86,32 @@
       <button class="mobile-drawer-close" style="background:none; border:none; font-size: 1.6rem; cursor:pointer;">&times;</button>
     </div>
     <div class="mobile-nav-links">
-      <a href="index.html" class="mobile-nav-link">الرئيسية</a>
-      <a href="shades-installation.html" class="mobile-sublink">مظلات سيارات</a>
-      <a href="fences-installation.html" class="mobile-sublink">سواتر أحواش</a>
-      <a href="sandwich-panel-installation.html" class="mobile-sublink">ساندوتش بانل</a>
-      <a href="pergolas-installation.html" class="mobile-sublink">برجولات حدائق</a>
+      <a href="/" class="mobile-nav-link">الرئيسية</a>
+      
+      <div>
+        <button class="mobile-accordion-btn" type="button">
+          <span>خدماتنا</span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+        <div class="mobile-accordion-content">
+          <a href="shades-installation.html" class="mobile-sublink">مظلات سيارات</a>
+          <a href="fences-installation.html" class="mobile-sublink">سواتر أحواش</a>
+          <a href="sandwich-panel-installation.html" class="mobile-sublink">ساندوتش بانل</a>
+          <a href="pergolas-installation.html" class="mobile-sublink">برجولات حدائق</a>
+        </div>
+      </div>
+
       <a href="prices.html" class="mobile-nav-link">الأسعار</a>
       <a href="our-works.html" class="mobile-nav-link">معرض الأعمال</a>
-      <a href="about-us.html" class="mobile-nav-link">من نحن</a>
+      <a href="faq.html" class="mobile-nav-link">الأسئلة الشائعة</a>
       <a href="warranty.html" class="mobile-nav-link">الضمان</a>
+      <a href="about-us.html" class="mobile-nav-link">من نحن</a>
       <a href="contact-us.html" class="mobile-nav-link">تواصل معنا</a>
+    </div>
+
+    <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem;">
+      <a href="tel:0552235142" class="btn btn-primary btn-block">اتصل الآن: 0552235142</a>
+      <a href="https://wa.me/966552235142" target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">محادثة واتساب فورية</a>
     </div>
   </aside>
 
@@ -132,6 +168,7 @@
     </div>
   </footer>
 
+  <!-- الأزرار العائمة -->
   <div class="floating-contact-right">
     <a href="https://wa.me/966552235142" class="floating-btn floating-btn-whatsapp" target="_blank" rel="noopener" aria-label="واتساب">💬</a>
     <a href="tel:0552235142" class="floating-btn floating-btn-call" aria-label="اتصال">📞</a>
