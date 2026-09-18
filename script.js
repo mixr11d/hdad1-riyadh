@@ -28,10 +28,10 @@
     clientPhoneFormatted: '0552235142',
     devPhone: '966578539687',
     googleAds: {
-      conversionId: 'AW-xxxxxxxxxxxxx',
-      callLabel: 'xxxxxxxxxxxxxxxxx',
-      whatsAppLabel: 'xxxxxxxxxxxxxx',
-      formLabel: 'xxxxxxxxxxxxxxxxxxx'
+      conversionId: 'AW-18455780287',
+      callLabel: '40UPCOqerPwcEL-3s-BE',
+      whatsAppLabel: 'EXqaCO2erPwcEL-3s-BE',
+      formLabel: 'Wj4wCLOWp_wcEL-3s-BE'
     },
     pricingRates: {
       'shades': 90,
