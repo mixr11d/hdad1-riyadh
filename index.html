@@ -18,7 +18,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 
-  <!-- ================= Google tag (gtag.js) الأساسي ================= -->
+  <!-- ================= كود Google Ads المباشر للإحالات الناجحة ================= -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18455780287"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -27,7 +27,7 @@
 
     gtag('config', 'AW-18455780287');
 
-    // دالة إحالة الاتصال المباشرة
+    // 1. تتبع إحالة الاتصال الهاتفي
     function reportCallConversion() {
       if (typeof gtag === 'function') {
         gtag('event', 'conversion', {
@@ -37,7 +37,7 @@
       }
     }
 
-    // دالة إحالة الواتساب المباشرة
+    // 2. تتبع إحالة الواتساب
     function reportWhatsappConversion() {
       if (typeof gtag === 'function') {
         gtag('event', 'conversion', {
@@ -46,8 +46,39 @@
         });
       }
     }
+
+    // 3. تتبع إحالة إرسال نموذج الحاسبة
+    function handleQuickQuoteSubmit(e) {
+      e.preventDefault();
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-18455780287/Wj4wCLOWp_wcEL-3s-BE',
+          'transport_type': 'beacon'
+        });
+      }
+
+      var serviceSelect = document.getElementById('service_type');
+      var serviceName = serviceSelect ? serviceSelect.options[serviceSelect.selectedIndex].text : 'مظلات وسواتر';
+      var district = document.getElementById('district') ? document.getElementById('district').value : 'مدينة الرياض';
+      var area = document.getElementById('project_area') ? document.getElementById('project_area').value : 'غير محددة';
+
+      var msg = "السلام عليكم ورحمة الله، أود طلب تسعيرة فورية ومعاينة:\n" +
+                "- الخدمة: " + serviceName + "\n" +
+                "- الحي: " + district + "\n" +
+                "- المساحة: " + area + " م²\n" +
+                "- المصدر: الموقع الإلكتروني";
+
+      var targetUrl = "https://wa.me/966552235142?text=" + encodeURIComponent(msg);
+
+      setTimeout(function() {
+        window.open(targetUrl, '_blank');
+      }, 300);
+
+      return false;
+    }
   </script>
-  <!-- =============================================================== -->
+  <!-- =========================================================================== -->
 
   <script type="application/ld+json">
   {
@@ -102,7 +133,7 @@
         <span>الأول لمظلات وسواتر الرياض</span>
       </a>
 
-      <!-- قائمة الكمبيوتر الكاملة -->
+      <!-- قائمة الكمبيوتر -->
       <nav class="nav-menu">
         <a href="/" class="nav-link active">الرئيسية</a>
         
@@ -203,13 +234,13 @@
             </div>
           </div>
 
-          <!-- نموذج التسعير السريع -->
+          <!-- نموذج التسعير السريع مع ربط الإحالة onsubmit -->
           <div class="quote-card">
             <div class="quote-card-header">
               <h2 class="quote-card-title">احسب تكلفة مشروعك فورياً</h2>
               <p class="quote-card-subtitle">حدد المساحة واحصل على التقدير عبر الواتساب</p>
             </div>
-            <form id="quick-quote-form">
+            <form id="quick-quote-form" onsubmit="return handleQuickQuoteSubmit(event);">
               <div class="form-group">
                 <label class="form-label" for="service_type">نوع العمل المطلوب</label>
                 <select id="service_type" name="service_type" class="form-control" required>
@@ -287,7 +318,7 @@
       </div>
     </section>
 
-    <!-- سحابة أحياء الرياض -->
+    <!-- سحابة الأحياء -->
     <section class="districts-section">
       <div class="container text-center">
         <span class="section-tag">تغطية شاملة</span>
