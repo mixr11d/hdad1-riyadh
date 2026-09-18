@@ -1,14 +1,14 @@
 /**
  * ==========================================================================
  * Project: الأول في الرياض للمظلات والسواتر والساندوتش بانل والبرجولات
- * Architecture: Vanilla JS - Auto Cache Cleaner & Conversion Engine
+ * Architecture: Vanilla JS - Engine & Google Ads Conversion Tracker
  * ==========================================================================
  */
 
 (function () {
   'use strict';
 
-  // تنظيف أي Service Worker قديم أو كاش معلق في متصفح الزائر تلقائياً
+  // 1. تنظيف أي Service Worker قديم أو كاش معلق تلقائياً
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(function (registrations) {
       for (let registration of registrations) {
@@ -22,7 +22,7 @@
     });
   }
 
-  // 1. الإعدادات وأكواد الإحالة (Google Ads IDs)
+  // 2. الإعدادات وأكواد الإحالة (Google Ads IDs)
   const APP_CONFIG = {
     clientPhone: '966552235142',
     clientPhoneFormatted: '0552235142',
@@ -31,7 +31,7 @@
       conversionId: 'AW-18455780287',
       callLabel: '40UPCOqerPwcEL-3s-BE',       // إحالة الاتصال
       whatsAppLabel: 'EXqaCO2erPwcEL-3s-BE',   // إحالة الواتساب
-      formLabel: 'Wj4wCLOWp_wcEL-3s-BE'        // إحالة إرسال النموذج/الحاسبة
+      formLabel: 'Wj4wCLOWp_wcEL-3s-BE'        // إحالة إرسال النموذج (Submit lead form)
     },
     pricingRates: {
       'shades': 90,
@@ -41,54 +41,25 @@
     }
   };
 
-  // تهيئة dataLayer فوراً لتخزين الأحداث حتى لو لم يُحمل السكربت بعد
+  // 3. تهيئة وحقن كود Google Ads فوراً (لتجاوز فحص Tag Assistant بنجاح)
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
   }
   window.gtag = gtag;
 
-  let scriptInjected = false;
+  gtag('js', new Date());
+  gtag('config', APP_CONFIG.googleAds.conversionId);
 
-  function isDeveloperSession() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('dev_preview') === 'true') return true;
-    if (localStorage.getItem('is_dev_mode') === 'true') return true;
-    return false;
-  }
-
-  // تحميل سكربت Google Ads
-  function injectGoogleAdsScript() {
-    if (scriptInjected || isDeveloperSession()) return;
-    scriptInjected = true;
-
-    gtag('js', new Date());
-    gtag('config', APP_CONFIG.googleAds.conversionId);
-
+  (function initGoogleTag() {
     const script = document.createElement('script');
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${APP_CONFIG.googleAds.conversionId}`;
     document.head.appendChild(script);
-  }
+  })();
 
-  // تجهيز وتحميل السكربت بأمان
-  function scheduleScriptLoad() {
-    const triggerEvents = ['mousemove', 'touchstart', 'scroll', 'keydown'];
-    const handler = function () {
-      injectGoogleAdsScript();
-      triggerEvents.forEach(evt => window.removeEventListener(evt, handler));
-    };
-
-    triggerEvents.forEach(evt => window.addEventListener(evt, handler, { passive: true, once: true }));
-    
-    // تحميل احتياطي بعد ثانيتين تلقائياً لضمان الجاهزية
-    setTimeout(injectGoogleAdsScript, 2000);
-  }
-
-  // دالة إرسال الإحالة الناجحة (Conversion Reporter)
+  // دالة إرسال الإحالات
   window.reportConversion = function (conversionType, customCallback) {
-    injectGoogleAdsScript();
-
     let executed = false;
     const runCallbackOnce = function () {
       if (!executed) {
@@ -97,24 +68,18 @@
       }
     };
 
-    if (isDeveloperSession()) {
-      runCallbackOnce();
-      return;
-    }
-
     let label = '';
     if (conversionType === 'call') label = APP_CONFIG.googleAds.callLabel;
     if (conversionType === 'whatsapp') label = APP_CONFIG.googleAds.whatsAppLabel;
     if (conversionType === 'form') label = APP_CONFIG.googleAds.formLabel;
 
-    // مهلة أمان لضمان عدم تعليق المتصفح في حال تأخر جوجل
+    // مهلة أمان لضمان عدم تعليق المتصفح
     const safetyTimeout = setTimeout(runCallbackOnce, 500);
 
-    if (label && !label.includes('xxxx')) {
+    if (label) {
       try {
         gtag('event', 'conversion', {
           send_to: `${APP_CONFIG.googleAds.conversionId}/${label}`,
-          transport_type: 'beacon',
           event_callback: function () {
             clearTimeout(safetyTimeout);
             runCallbackOnce();
@@ -130,7 +95,7 @@
     }
   };
 
-  // 2. القائمة والتنقل
+  // 4. القائمة الجانبية (Mobile Menu)
   function setupNavigation() {
     const hamburgerBtn = document.querySelector('.hamburger-btn');
     const drawer = document.querySelector('.mobile-nav-drawer');
@@ -164,7 +129,7 @@
     }
   }
 
-  // 3. زر الصعود للأعلى
+  // 5. زر الصعود للأعلى
   function setupBackToTop() {
     const scrollBtn = document.querySelector('.floating-scroll-left');
     if (!scrollBtn) return;
@@ -182,7 +147,7 @@
     });
   }
 
-  // 4. حاسبة الأسعار ونموذج الطلب
+  // 6. حاسبة الأسعار ونموذج الطلب السريع (Form Tracking)
   function setupQuoteCalculator() {
     const calcForm = document.getElementById('quick-quote-form');
     if (!calcForm) return;
@@ -215,17 +180,16 @@
       const areaVal = areaInput?.value || 'غير محددة';
 
       const messageText = `السلام عليكم ورحمة الله، أود طلب تسعيرة فورية ومعاينة:\n- الخدمة: ${serviceName}\n- الحي: ${district}\n- المساحة: ${areaVal} م²\n- المصدر: الموقع الإلكتروني`;
-      const encodedMsg = encodeURIComponent(messageText);
-      const targetUrl = `https://wa.me/${APP_CONFIG.clientPhone}?text=${encodedMsg}`;
+      const targetUrl = `https://wa.me/${APP_CONFIG.clientPhone}?text=${encodeURIComponent(messageText)}`;
 
-      // إرسال إحالة النموذج قبل تحويل العميل للواتساب
+      // إرسال الإحالة لجوجل ثم فتح الواتساب
       window.reportConversion('form', function () {
-        window.location.href = targetUrl;
+        window.open(targetUrl, '_blank') || (window.location.href = targetUrl);
       });
     });
   }
 
-  // 5. تتبع نقرات الاتصال والواتساب لجميع الروابط
+  // 7. تتبع نقرات الاتصال والواتساب
   function setupConversionClickTrackers() {
     let lastClickTime = 0;
 
@@ -235,7 +199,7 @@
 
       const href = link.getAttribute('href') || '';
 
-      // استثناء رقم المطور
+      // استبعاد رقم المطور
       if (href.includes(APP_CONFIG.devPhone) || href.includes('0578539687')) {
         return;
       }
@@ -253,8 +217,6 @@
       // تتبع نقرات الواتساب
       if (href.includes('wa.me') || href.includes('whatsapp.com')) {
         lastClickTime = now;
-        
-        // إذا كان الرابط يفتح في نفس الصفحة، نؤخر الانتقال قليلاً حتى تُسجل الإحالة
         if (!link.target || link.target === '_self') {
           e.preventDefault();
           window.reportConversion('whatsapp', function () {
@@ -267,9 +229,8 @@
     }, true);
   }
 
-  // تشغيل كل الوظائف عند جاهزية الـ DOM
+  // تشغيل الوظائف عند اكتمال تحميل الصفحة
   document.addEventListener('DOMContentLoaded', function () {
-    scheduleScriptLoad();
     setupNavigation();
     setupBackToTop();
     setupQuoteCalculator();
