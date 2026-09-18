@@ -22,16 +22,16 @@
     });
   }
 
-  // 1. الإعدادات
+  // 1. الإعدادات وأكواد الإحالة (Google Ads IDs)
   const APP_CONFIG = {
     clientPhone: '966552235142',
     clientPhoneFormatted: '0552235142',
     devPhone: '966578539687',
     googleAds: {
       conversionId: 'AW-18455780287',
-      callLabel: '40UPCOqerPwcEL-3s-BE',
-      whatsAppLabel: 'EXqaCO2erPwcEL-3s-BE',
-      formLabel: 'Wj4wCLOWp_wcEL-3s-BE'
+      callLabel: '40UPCOqerPwcEL-3s-BE',       // إحالة الاتصال
+      whatsAppLabel: 'EXqaCO2erPwcEL-3s-BE',   // إحالة الواتساب
+      formLabel: 'Wj4wCLOWp_wcEL-3s-BE'        // إحالة إرسال النموذج/الحاسبة
     },
     pricingRates: {
       'shades': 90,
@@ -41,6 +41,7 @@
     }
   };
 
+  // تهيئة dataLayer فوراً لتخزين الأحداث حتى لو لم يُحمل السكربت بعد
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
@@ -56,6 +57,7 @@
     return false;
   }
 
+  // تحميل سكربت Google Ads
   function injectGoogleAdsScript() {
     if (scriptInjected || isDeveloperSession()) return;
     scriptInjected = true;
@@ -69,20 +71,21 @@
     document.head.appendChild(script);
   }
 
-  function scheduleLazyTracking() {
-    const triggerEvents = ['click', 'touchstart', 'scroll'];
+  // تجهيز وتحميل السكربت بأمان
+  function scheduleScriptLoad() {
+    const triggerEvents = ['mousemove', 'touchstart', 'scroll', 'keydown'];
     const handler = function () {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(injectGoogleAdsScript, { timeout: 2000 });
-      } else {
-        setTimeout(injectGoogleAdsScript, 500);
-      }
+      injectGoogleAdsScript();
       triggerEvents.forEach(evt => window.removeEventListener(evt, handler));
     };
 
     triggerEvents.forEach(evt => window.addEventListener(evt, handler, { passive: true, once: true }));
+    
+    // تحميل احتياطي بعد ثانيتين تلقائياً لضمان الجاهزية
+    setTimeout(injectGoogleAdsScript, 2000);
   }
 
+  // دالة إرسال الإحالة الناجحة (Conversion Reporter)
   window.reportConversion = function (conversionType, customCallback) {
     injectGoogleAdsScript();
 
@@ -104,11 +107,12 @@
     if (conversionType === 'whatsapp') label = APP_CONFIG.googleAds.whatsAppLabel;
     if (conversionType === 'form') label = APP_CONFIG.googleAds.formLabel;
 
-    const safetyTimeout = setTimeout(runCallbackOnce, 600);
+    // مهلة أمان لضمان عدم تعليق المتصفح في حال تأخر جوجل
+    const safetyTimeout = setTimeout(runCallbackOnce, 500);
 
-    if (typeof window.gtag === 'function' && label && !label.includes('xxxx')) {
+    if (label && !label.includes('xxxx')) {
       try {
-        window.gtag('event', 'conversion', {
+        gtag('event', 'conversion', {
           send_to: `${APP_CONFIG.googleAds.conversionId}/${label}`,
           transport_type: 'beacon',
           event_callback: function () {
@@ -126,6 +130,7 @@
     }
   };
 
+  // 2. القائمة والتنقل
   function setupNavigation() {
     const hamburgerBtn = document.querySelector('.hamburger-btn');
     const drawer = document.querySelector('.mobile-nav-drawer');
@@ -159,6 +164,7 @@
     }
   }
 
+  // 3. زر الصعود للأعلى
   function setupBackToTop() {
     const scrollBtn = document.querySelector('.floating-scroll-left');
     if (!scrollBtn) return;
@@ -176,6 +182,7 @@
     });
   }
 
+  // 4. حاسبة الأسعار ونموذج الطلب
   function setupQuoteCalculator() {
     const calcForm = document.getElementById('quick-quote-form');
     if (!calcForm) return;
@@ -211,12 +218,14 @@
       const encodedMsg = encodeURIComponent(messageText);
       const targetUrl = `https://wa.me/${APP_CONFIG.clientPhone}?text=${encodedMsg}`;
 
+      // إرسال إحالة النموذج قبل تحويل العميل للواتساب
       window.reportConversion('form', function () {
         window.location.href = targetUrl;
       });
     });
   }
 
+  // 5. تتبع نقرات الاتصال والواتساب لجميع الروابط
   function setupConversionClickTrackers() {
     let lastClickTime = 0;
 
@@ -226,6 +235,7 @@
 
       const href = link.getAttribute('href') || '';
 
+      // استثناء رقم المطور
       if (href.includes(APP_CONFIG.devPhone) || href.includes('0578539687')) {
         return;
       }
@@ -233,21 +243,33 @@
       const now = Date.now();
       if (now - lastClickTime < 700) return;
 
+      // تتبع نقرات الاتصال
       if (href.startsWith('tel:')) {
         lastClickTime = now;
         window.reportConversion('call');
         return;
       }
 
+      // تتبع نقرات الواتساب
       if (href.includes('wa.me') || href.includes('whatsapp.com')) {
         lastClickTime = now;
-        window.reportConversion('whatsapp');
+        
+        // إذا كان الرابط يفتح في نفس الصفحة، نؤخر الانتقال قليلاً حتى تُسجل الإحالة
+        if (!link.target || link.target === '_self') {
+          e.preventDefault();
+          window.reportConversion('whatsapp', function () {
+            window.location.href = href;
+          });
+        } else {
+          window.reportConversion('whatsapp');
+        }
       }
     }, true);
   }
 
+  // تشغيل كل الوظائف عند جاهزية الـ DOM
   document.addEventListener('DOMContentLoaded', function () {
-    scheduleLazyTracking();
+    scheduleScriptLoad();
     setupNavigation();
     setupBackToTop();
     setupQuoteCalculator();
